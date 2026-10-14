@@ -2,7 +2,7 @@
 
 AI agents that search the web for full-time jobs for soon-to-graduate students.
 
-![Job Scout web interface](docs/screenshot.png)
+![Demo: your profile on top, jobs found by the scouts below, scored by fit](docs/demo.gif)
 
 ## How it works
 - `agents.py` — three **scout** agents search the web in parallel (new-grad programs, job boards,
@@ -20,6 +20,8 @@ cd "$HOME\Desktop\job-scout"
 .\.venv\Scripts\python app.py
 ```
 Then open http://localhost:5000. Press `Ctrl+C` in the terminal to stop it.
+
+![Job Scout web interface](docs/screenshot.png)
 
 ## First-time setup (already done on this computer)
 ```
