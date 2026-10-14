@@ -2,6 +2,8 @@
 
 AI agents that search the web for full-time jobs for soon-to-graduate students.
 
+![Job Scout web interface](docs/screenshot.png)
+
 ## How it works
 - `agents.py` — three **scout** agents search the web in parallel (new-grad programs, job boards,
   local/niche employers). A **matcher** agent then merges their findings, scores each job 0–100
