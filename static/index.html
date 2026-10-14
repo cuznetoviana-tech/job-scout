@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Job Scout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fff8ef; --card: #ffffff; --text: #23202b; --muted: #6f6a78; --line: #efe4d6;
+    --coral: #ff6b4a; --violet: #6c4cf5; --mint: #18b98a; --sun: #ffc23d;
+    --coral-soft: #ffe7e0; --violet-soft: #ece7ff; --mint-soft: #ddf6ee; --sun-soft: #fff1cc;
+    --shadow: 0 2px 0 rgba(35, 32, 43, .06), 0 10px 30px -12px rgba(35, 32, 43, .18);
+    --radius: 18px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17151d; --card: #221f2b; --text: #f3eff8; --muted: #a8a2b4; --line: #34303f;
+      --coral: #ff8466; --violet: #9d86ff; --mint: #4fd8ab; --sun: #ffd166;
+      --coral-soft: #3a2420; --violet-soft: #2a2442; --mint-soft: #1b3229; --sun-soft: #3a3020;
+      --shadow: 0 10px 30px -12px rgba(0, 0, 0, .6);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; color: var(--text); font: 15px/1.55 "DM Sans", system-ui, sans-serif;
+    background:
+      radial-gradient(600px 300px at 0% 0%, var(--coral-soft), transparent 70%),
+      radial-gradient(500px 300px at 100% 10%, var(--violet-soft), transparent 70%),
+      var(--bg);
+    background-attachment: fixed; min-height: 100vh;
+  }
+  h1, h2, h3 { font-family: "Bricolage Grotesque", system-ui, sans-serif; letter-spacing: -.01em; }
+
+  /* ---------- hero ---------- */
+  header { max-width: 1200px; margin: 0 auto; padding: 36px 16px 12px;
+           display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  header h1 { margin: 0; font-size: clamp(32px, 6vw, 52px); font-weight: 800; line-height: 1; }
+  header h1 .hl { background: linear-gradient(90deg, var(--coral), var(--violet));
+                  -webkit-background-clip: text; background-clip: text; color: transparent; }
+  header p { margin: 8px 0 0; color: var(--muted); font-size: 17px; }
+  .squad { display: flex; }
+  .squad span { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center;
+                font-size: 26px; border: 3px solid var(--bg); margin-left: -10px; box-shadow: var(--shadow);
+                animation: bob 3s ease-in-out infinite; }
+  .squad span:nth-child(1) { background: var(--coral-soft); }
+  .squad span:nth-child(2) { background: var(--violet-soft); animation-delay: .3s; }
+  .squad span:nth-child(3) { background: var(--mint-soft); animation-delay: .6s; }
+  .squad span:nth-child(4) { background: var(--sun-soft); animation-delay: .9s; }
+  @keyframes bob { 50% { transform: translateY(-6px); } }
+
+  main { max-width: 1200px; margin: 0 auto; padding: 16px 16px 48px;
+         display: grid; grid-template-columns: 370px 1fr; gap: 24px; align-items: start; }
+  @media (max-width: 880px) { main { grid-template-columns: 1fr; } }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+
+  /* ---------- form ---------- */
+  form.card { padding: 20px; position: sticky; top: 16px; }
+  @media (max-width: 880px) { form.card { position: static; } }
+  form h2 { margin: 0 0 4px; font-size: 22px; }
+  form .sub { margin: 0 0 14px; color: var(--muted); font-size: 14px; }
+  label { display: block; font-weight: 700; font-size: 13px; margin: 12px 0 5px; }
+  .hint { font-weight: 400; color: var(--muted); }
+  input, textarea, select {
+    width: 100%; padding: 10px 12px; border: 2px solid var(--line); border-radius: 12px;
+    background: var(--bg); color: var(--text); font: inherit; transition: border-color .15s;
+  }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--violet); }
+  textarea { resize: vertical; min-height: 70px; }
+  select { cursor: pointer; }
+  .type-pick { background: var(--violet-soft); border-radius: 14px; padding: 12px; margin-bottom: 4px; }
+  .type-pick label { margin-top: 0; }
+  .type-pick select { background: var(--card); border-color: transparent; font-weight: 600; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  details { margin-top: 12px; }
+  summary { cursor: pointer; font-weight: 700; font-size: 13px; color: var(--violet); }
+
+  button { font: inherit; cursor: pointer; border-radius: 999px; border: 2px solid var(--line);
+           background: var(--card); color: var(--text); padding: 6px 14px; font-weight: 600;
+           transition: transform .1s, background .15s; }
+  button:active { transform: scale(.96); }
+  .go { width: 100%; margin-top: 18px; padding: 14px; border: 0; font-size: 17px; color: #fff;
+        background: linear-gradient(90deg, var(--coral), var(--violet)); box-shadow: var(--shadow); }
+  .go:hover { filter: brightness(1.06); }
+  .go:disabled { opacity: .75; cursor: wait; }
+
+  /* ---------- agent status ---------- */
+  .agents { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
+  @media (max-width: 640px) { .agents { grid-template-columns: repeat(2, 1fr); } }
+  .agent { padding: 12px; text-align: center; }
+  .agent .face { font-size: 30px; display: inline-block; }
+  .agent.working .face { animation: bob .9s ease-in-out infinite; }
+  .agent b { display: block; font-size: 13px; margin-top: 2px; }
+  .pill { display: inline-block; margin-top: 6px; font-size: 12px; font-weight: 700; padding: 2px 10px;
+          border-radius: 999px; background: var(--line); color: var(--muted); }
+  .working .pill { background: var(--sun-soft); color: var(--text); }
+  .done .pill { background: var(--mint-soft); color: var(--mint); }
+  .oops .pill { background: var(--coral-soft); color: var(--coral); }
+  .error-box { padding: 14px 16px; margin-bottom: 16px; border-color: var(--coral); color: var(--coral); font-weight: 700; }
+
+  /* ---------- toolbar ---------- */
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
+  .stats { display: flex; gap: 8px; margin-right: auto; flex-wrap: wrap; }
+  .stat { font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
+  .stat.a { background: var(--violet-soft); color: var(--violet); }
+  .stat.b { background: var(--sun-soft); }
+  .stat.c { background: var(--mint-soft); color: var(--mint); }
+  .stat.new, .chip.new { background: var(--coral); color: #fff; }
+  .toolbar select { width: auto; padding: 6px 10px; border-radius: 999px; font-size: 14px; background: var(--card); }
+
+  /* ---------- job cards ---------- */
+  .jobs { display: grid; gap: 14px; }
+  .job { padding: 18px; display: grid; grid-template-columns: 1fr auto; gap: 6px 18px;
+         transition: transform .15s, box-shadow .15s; animation: pop .35s ease both; }
+  .job:hover { transform: translateY(-2px); }
+  .job.applied { opacity: .6; }
+  @keyframes pop { from { opacity: 0; transform: translateY(8px); } }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 999px; background: var(--violet-soft); }
+  .chip.date { background: var(--sun-soft); }
+  .job h3 { margin: 6px 0 0; font-size: 19px; line-height: 1.25; }
+  .job h3 a { color: var(--text); text-decoration: none; }
+  .job h3 a:hover { color: var(--violet); text-decoration: underline; }
+  .meta { color: var(--muted); font-size: 14px; }
+  .fit { grid-row: 1 / span 3; grid-column: 2; text-align: center; }
+  .ring { --pct: 0; --c: var(--mint); width: 74px; height: 74px; border-radius: 50%; display: grid; place-items: center;
+          background: conic-gradient(var(--c) calc(var(--pct) * 1%), var(--line) 0); }
+  .ring b { width: 58px; height: 58px; border-radius: 50%; background: var(--card); display: grid; place-items: center;
+            font: 800 21px "Bricolage Grotesque", sans-serif; }
+  .fit small { display: block; margin-top: 4px; font-size: 12px; font-weight: 700; color: var(--c); }
+  .why { grid-column: 1 / -1; margin: 6px 0 0; }
+  .watch { grid-column: 1 / -1; margin: 0; font-size: 14px; padding: 8px 12px; border-radius: 12px; background: var(--sun-soft); }
+  .actions { grid-column: 1 / -1; display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+  .actions button.hide { border-color: transparent; color: var(--muted); font-weight: 500; font-size: 13px; }
+  .actions button.hide:hover { color: var(--coral); }
+  .actions a.open { margin-left: auto; font-weight: 700; color: var(--violet); text-decoration: none; padding: 6px 4px; }
+  .actions button.on[data-mark="saved"] { background: var(--sun-soft); border-color: var(--sun); }
+  .actions button.on[data-mark="applied"] { background: var(--mint-soft); border-color: var(--mint); color: var(--mint); }
+
+  .empty { padding: 44px 20px; text-align: center; color: var(--muted); }
+  .empty .big { font-size: 46px; }
+  .empty h3 { color: var(--text); margin: 8px 0 4px; }
+
+  /* ---------- resume box ---------- */
+  .resume-box { margin-top: 14px; padding: 12px; border-radius: 14px; border: 2px dashed var(--line); }
+  .resume-box > label { margin-top: 0; }
+  .resume-status { font-size: 14px; color: var(--muted); }
+  .resume-status.ok { color: var(--mint); font-weight: 700; }
+  .resume-actions { display: flex; gap: 8px; margin-top: 8px; }
+  label.upload { display: inline-block; margin: 0; cursor: pointer; padding: 6px 14px; border-radius: 999px;
+                 background: var(--violet-soft); color: var(--violet); font-size: 14px; }
+  .resume-actions button { font-size: 14px; }
+  .actions button.prep { background: var(--violet); border-color: var(--violet); color: #fff; }
+  .actions button.prep.ready { background: var(--violet-soft); color: var(--violet); }
+
+  /* ---------- application kit ---------- */
+  dialog.kit { width: min(820px, calc(100vw - 32px)); max-height: calc(100vh - 32px); padding: 0; border: 0;
+               border-radius: 22px; background: var(--card); color: var(--text); box-shadow: 0 30px 80px -20px rgba(0,0,0,.45); }
+  dialog.kit::backdrop { background: rgba(23, 21, 29, .55); backdrop-filter: blur(3px); }
+  .kit-head { position: sticky; top: 0; z-index: 1; padding: 20px 22px 14px; background: var(--card);
+              border-bottom: 1px solid var(--line); display: flex; gap: 12px; align-items: start; }
+  .kit-head h2 { margin: 0; font-size: 22px; line-height: 1.2; }
+  .kit-head .meta { margin-top: 2px; }
+  .kit-head .close { margin-left: auto; flex: none; width: 36px; height: 36px; padding: 0; font-size: 18px; }
+  .kit-body { padding: 18px 22px 24px; display: grid; gap: 16px; }
+  .kit-sec { border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+  .kit-sec h3 { margin: 0 0 8px; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+  .kit-sec h3 button { margin-left: auto; font-size: 13px; padding: 4px 12px; }
+  .kit-sec ul { margin: 0; padding-left: 20px; }
+  .kit-sec li + li { margin-top: 4px; }
+  .kit-sec.note { background: var(--sun-soft); border-color: transparent; font-size: 14px; }
+  .kit-sec.open-ok { background: var(--mint-soft); border-color: transparent; }
+  .kit-sec.open-bad { background: var(--coral-soft); border-color: transparent; }
+  .kit textarea.letter { min-height: 320px; background: var(--bg); line-height: 1.6; }
+  .tweak { padding: 10px 12px; border-radius: 12px; background: var(--bg); }
+  .tweak + .tweak, .qa + .qa { margin-top: 8px; }
+  .tweak b, .qa b { display: block; font-size: 13px; }
+  .tweak small { color: var(--muted); }
+  .qa textarea { min-height: 110px; margin-top: 6px; }
+  .check { display: flex; gap: 8px; align-items: start; font-size: 15px; }
+  .check input { width: auto; margin-top: 4px; }
+  .kit-foot { display: flex; gap: 10px; flex-wrap: wrap; }
+  .kit-foot a.go { width: auto; margin: 0; text-decoration: none; text-align: center; flex: 1; }
+  .kit-loading { padding: 40px 22px 50px; text-align: center; }
+  .kit-loading .big { font-size: 48px; display: inline-block; animation: bob .9s ease-in-out infinite; }
+  .kit-loading ul { list-style: none; padding: 0; color: var(--muted); }
+
+  /* confetti when you mark a job applied */
+  .confetti { position: fixed; pointer-events: none; font-size: 20px; animation: fly 1s ease-out forwards; z-index: 9; }
+  @keyframes fly { to { transform: translate(var(--dx), var(--dy)) rotate(var(--r)); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Job <span class="hl">Scout</span> 🧭</h1>
+    <p>A squad of AI scouts hunting full-time jobs for soon-to-be grads.</p>
+  </div>
+  <div class="squad" aria-hidden="true"><span>🎓</span><span>📋</span><span>📍</span><span>🧠</span></div>
+</header>
+
+<main>
+  <form id="profile" class="card">
+    <h2>About you</h2>
+    <p class="sub">The scouts use this to find jobs that fit.</p>
+
+    <div class="type-pick">
+      <label for="job_type">✨ What type of job?</label>
+      <select id="job_type" name="job_type"><option value="">Any type — surprise me</option></select>
+    </div>
+
+    <label>Your name <span class="hint">(signs your cover letters)</span></label>
+    <input name="name" placeholder="Alex Rivera" autocomplete="name">
+    <label>Degree / major</label>
+    <input name="major" placeholder="B.S. Computer Science" required>
+    <div class="row">
+      <div><label>School</label><input name="school"></div>
+      <div><label>Graduation</label><input name="grad_date" placeholder="May 2027"></div>
+    </div>
+    <label>Target roles</label>
+    <input name="roles" placeholder="Software engineer, data analyst" required>
+    <label>Skills</label>
+    <input name="skills" placeholder="Python, SQL, React">
+    <label>Preferred locations</label>
+    <input name="locations" placeholder="Chicago, Boston">
+    <div class="row">
+      <div><label>Remote OK?</label>
+        <select name="remote"><option>Yes</option><option>No</option><option>Remote only</option></select></div>
+      <div><label>Visa sponsorship?</label>
+        <select name="visa"><option>No</option><option>Yes, I need it</option></select></div>
+    </div>
+
+    <details>
+      <summary>More details (optional — better matches)</summary>
+      <label>Industries</label>
+      <input name="industries" placeholder="Healthcare, climate, finance">
+      <label>Anything else</label>
+      <textarea name="notes" placeholder="e.g. prefer smaller companies, salary above $70k"></textarea>
+    </details>
+
+    <div class="resume-box">
+      <label>📄 Your resume <span class="hint">(sharper fit scores + powers the application helper)</span></label>
+      <div class="resume-status" id="resumeStatus">Checking…</div>
+      <div class="resume-actions">
+        <label class="upload" for="resumeFile">Upload PDF</label>
+        <input type="file" id="resumeFile" accept=".pdf,application/pdf" hidden>
+        <button type="button" id="resumeRemove" hidden>Remove</button>
+      </div>
+      <details>
+        <summary>…or paste it as text</summary>
+        <textarea name="resume" rows="5" placeholder="Paste your resume here"></textarea>
+      </details>
+    </div>
+
+    <button class="go" id="go" type="submit">🚀 Send out the scouts</button>
+  </form>
+
+  <section>
+    <div id="agents" class="agents" hidden></div>
+    <div id="error" class="card error-box" hidden></div>
+
+    <div class="toolbar" id="toolbar" hidden>
+      <div class="stats" id="stats"></div>
+      <select id="typeFilter" aria-label="Filter by type of job"><option value="all">All job types</option></select>
+      <select id="filter" aria-label="Which jobs to show">
+        <option value="latest">🔎 Latest search</option>
+        <option value="all">🗂️ All my jobs</option>
+        <option value="saved">⭐ Saved</option>
+        <option value="todo">Not applied yet</option>
+        <option value="applied">✅ Applied</option>
+      </select>
+      <select id="sort" aria-label="Sort">
+        <option value="fit">Best fit first</option>
+        <option value="deadline">Deadline soonest</option>
+        <option value="recent">Newest found</option>
+        <option value="company">Company A–Z</option>
+      </select>
+    </div>
+
+    <div class="jobs" id="jobs">
+      <div class="empty card">
+        <div class="big">🔭</div>
+        <h3>Your matches will land here</h3>
+        Fill in your profile and send out the scouts.<br>A search takes a few minutes while they browse the web.
+      </div>
+    </div>
+  </section>
+</main>
+
+<dialog class="kit" id="kit"></dialog>
+
+<script>
+const form = document.getElementById("profile");
+const jobsEl = document.getElementById("jobs");
+const goBtn = document.getElementById("go");
+const agentsEl = document.getElementById("agents");
+const errorEl = document.getElementById("error");
+const filterEl = document.getElementById("filter");
+const typeFilterEl = document.getElementById("typeFilter");
+const sortEl = document.getElementById("sort");
+
+const AGENTS = [
+  { key: "New-grad programs", face: "🎓", name: "Grad programs" },
+  { key: "Job boards", face: "📋", name: "Job boards" },
+  { key: "Local & niche", face: "📍", name: "Local & niche" },
+  { key: "Matcher", face: "🧠", name: "Matcher" },
+];
+const TYPE_EMOJI = {
+  "Software & Engineering": "💻", "Data & Analytics": "📊", "Business & Consulting": "💼",
+  "Finance & Accounting": "💰", "Marketing & Communications": "📣", "Sales & Customer Success": "🤝",
+  "Product & Design": "🎨", "Operations & Supply Chain": "📦", "Healthcare & Life Sciences": "🩺",
+  "Science & Research": "🔬", "Education": "🍎", "Government & Public Policy": "🏛️",
+  "Nonprofit & Social Impact": "🌱", "Media & Creative": "🎬", "Other": "✨",
+};
+
+// Browser storage: only used to bring over data saved by the older version of this page
+const store = {
+  get(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } },
+  set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} },
+};
+
+// Everything below is loaded from the server's database (my_files/jobscout.db)
+let jobs = [];        // every job any search has found (minus ones you hid)
+let marks = {};       // { url: {saved, applied, applied_at} }
+let kits = {};        // { url: application kit } so you never pay for the same kit twice
+const prepping = {};  // { url: latest task state } while a kit is being written
+const kitErrors = {}; // { url: error message }
+
+const api = (url, method, body) =>
+  fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+
+async function loadJobs() {
+  const data = await (await fetch("/api/jobs")).json();
+  jobs = data.jobs;
+  marks = Object.fromEntries(jobs.map(j => [j.url, { saved: j.saved, applied: !!j.applied_at, applied_at: j.applied_at }]));
+  kits = Object.fromEntries(jobs.filter(j => j.kit).map(j => [j.url, j.kit]));
+  render();
+}
+
+function saveMark(url, change) { api("/api/jobs/mark", "POST", { url, ...change }); }
+
+const kitTimers = {};
+function saveKit(url) {  // waits until you pause typing, then saves
+  clearTimeout(kitTimers[url]);
+  kitTimers[url] = setTimeout(() => api("/api/kit", "PUT", { url, kit: kits[url] || null }), 600);
+}
+
+// The older version kept jobs in this browser; copy them into the database once
+async function importOldData() {
+  if (store.get("imported", false)) return;
+  const old = { jobs: store.get("lastJobs", []), marks: store.get("marks", {}),
+                kits: store.get("kits", {}), profile: store.get("profile", null) };
+  if (old.jobs.length || old.profile) await api("/api/import", "POST", old);
+  store.set("imported", true);
+}
+
+async function startup() {
+  try {
+    const types = await (await fetch("/api/job-types")).json();
+    for (const t of types) {
+      form.job_type.add(new Option(`${TYPE_EMOJI[t] || "✨"} ${t}`, t));
+      typeFilterEl.add(new Option(`${TYPE_EMOJI[t] || "✨"} ${t}`, t));
+    }
+    await importOldData();
+    const profile = await (await fetch("/api/profile")).json();
+    for (const [k, v] of Object.entries(profile)) if (form.elements[k]) form.elements[k].value = v;
+    await loadJobs();
+    if (!jobs.some(j => j.in_latest)) filterEl.value = "all";
+    render();
+  } catch {
+    showError("Couldn't reach the server. Is app.py still running?");
+  }
+}
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const profile = Object.fromEntries(new FormData(form));
+  goBtn.disabled = true; goBtn.textContent = "🛰️ Scouts are out searching…";
+  errorEl.hidden = true;
+  showAgents([]);
+  try {
+    const state = await runTask("/api/search", profile, s => showAgents(s.log));
+    if (state.error) showError(state.error);
+    if (state.status === "done") { filterEl.value = "latest"; await loadJobs(); }
+  } catch {
+    showError("Couldn't reach the server. Is app.py still running?");
+  }
+  goBtn.disabled = false; goBtn.textContent = "🚀 Send out the scouts";
+});
+
+// Start an agent task on the server, then check on it every 2 seconds until it finishes
+async function runTask(url, body, onUpdate) {
+  const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const { id } = await res.json();
+  while (true) {
+    const state = await (await fetch(`/api/task/${id}`)).json();
+    onUpdate(state);
+    if (state.status !== "running") return state;
+    await new Promise(r => setTimeout(r, 2000));
+  }
+}
+
+// Work out each agent's status from the progress messages the server sends
+function showAgents(log) {
+  agentsEl.hidden = false;
+  agentsEl.innerHTML = AGENTS.map(a => {
+    const mine = log.filter(l => a.key === "Matcher" ? /^(🧠|🎉)|Matcher/.test(l) : l.includes(a.key));
+    const last = mine[mine.length - 1] || "";
+    let cls = "", label = a.key === "Matcher" ? "Waiting" : "Getting ready";
+    if (/^(✅|🎉)/.test(last)) { cls = "done"; label = "Done!"; }
+    else if (last.startsWith("⚠️")) { cls = "oops"; label = "Hit a snag"; }
+    else if (last) { cls = "working"; label = a.key === "Matcher" ? "Ranking…" : "Searching…"; }
+    return `<div class="card agent ${cls}"><span class="face">${a.face}</span><b>${a.name}</b><span class="pill">${label}</span></div>`;
+  }).join("");
+}
+
+function showError(msg) { errorEl.hidden = false; errorEl.textContent = "😬 " + msg; }
+
+function fitLabel(s) {
+  if (s >= 80) return ["Great fit", "var(--mint)"];
+  if (s >= 60) return ["Good fit", "var(--violet)"];
+  if (s >= 40) return ["Maybe", "var(--sun)"];
+  return ["Stretch", "var(--coral)"];
+}
+
+function render() {
+  const f = filterEl.value, t = typeFilterEl.value;
+  let shown = jobs.filter(j => {
+    const m = marks[j.url] || {};
+    const statusOk = f === "all" || (f === "latest" && j.in_latest) || (f === "saved" && m.saved)
+      || (f === "applied" && m.applied) || (f === "todo" && !m.applied);
+    return statusOk && (t === "all" || (j.category || "Other") === t);
+  });
+  const byDeadline = j => (j.deadline && j.deadline !== "unknown" && !isNaN(Date.parse(j.deadline))) ? Date.parse(j.deadline) : Infinity;
+  if (sortEl.value === "fit") shown.sort((a, b) => b.fit_score - a.fit_score);
+  if (sortEl.value === "deadline") shown.sort((a, b) => byDeadline(a) - byDeadline(b));
+  if (sortEl.value === "company") shown.sort((a, b) => a.company.localeCompare(b.company));
+  if (sortEl.value === "recent") shown.sort((a, b) => (b.first_seen || "").localeCompare(a.first_seen || ""));
+
+  const nSaved = jobs.filter(j => marks[j.url]?.saved).length;
+  const nApplied = jobs.filter(j => marks[j.url]?.applied).length;
+  const nNew = jobs.filter(j => j.is_new).length;
+  document.getElementById("toolbar").hidden = !jobs.length;
+  document.getElementById("stats").innerHTML =
+    `<span class="stat a">🗂️ ${jobs.length} jobs</span>` + (nNew ? `<span class="stat new">🆕 ${nNew} new</span>` : "") +
+    `<span class="stat b">⭐ ${nSaved} saved</span><span class="stat c">✅ ${nApplied} applied</span>`;
+
+  if (!shown.length) {
+    jobsEl.innerHTML = `<div class="empty card"><div class="big">🫥</div><h3>Nothing here yet</h3>Try a different view in the dropdowns above.</div>`;
+    return;
+  }
+  jobsEl.innerHTML = shown.map((j, i) => {
+    const m = marks[j.url] || {};
+    const [label, color] = fitLabel(j.fit_score);
+    const cat = j.category || "Other";
+    const known = d => d && !/^unknown/i.test(d);  // older results sometimes have notes like "unknown (verify)"
+    const dates = [known(j.posted) && `🗓️ Posted ${j.posted}`, known(j.deadline) && `⏰ Apply by ${j.deadline}`].filter(Boolean);
+    const appliedOn = m.applied_at ? new Date(m.applied_at).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "";
+    return `<article class="card job ${m.applied ? "applied" : ""}" style="animation-delay:${Math.min(i, 10) * 40}ms">
+      <div class="chips">${j.is_new ? `<span class="chip new">🆕 New</span>` : ""}<span class="chip">${TYPE_EMOJI[cat] || "✨"} ${esc(cat)}</span>${dates.map(d => `<span class="chip date">${esc(d)}</span>`).join("")}</div>
+      <div class="fit" style="--c:${color}">
+        <div class="ring" style="--pct:${Number(j.fit_score) || 0}; --c:${color}"><b>${Number(j.fit_score) || 0}</b></div>
+        <small>${label}</small>
+      </div>
+      <h3><a href="${safeUrl(j.url)}" target="_blank" rel="noopener">${esc(j.title)}</a></h3>
+      <div class="meta">🏢 ${esc(j.company)} · 📍 ${esc(j.location)}</div>
+      <p class="why">${esc(j.why_it_fits)}</p>
+      ${j.watch_out ? `<p class="watch">👀 ${esc(j.watch_out)}</p>` : ""}
+      <div class="actions">
+        <button data-url="${esc(j.url)}" data-mark="saved" class="${m.saved ? "on" : ""}">${m.saved ? "⭐ Saved" : "☆ Save"}</button>
+        <button data-url="${esc(j.url)}" data-mark="applied" class="${m.applied ? "on" : ""}">${m.applied ? `✅ Applied ${appliedOn}` : "Mark applied"}</button>
+        <button data-prep="${esc(j.url)}" class="prep ${kits[j.url] ? "ready" : ""}">${
+          prepping[j.url] ? "⏳ Writing…" : kits[j.url] ? "📝 View application kit" : "✍️ Prep my application"}</button>
+        <a class="open" href="${safeUrl(j.url)}" target="_blank" rel="noopener">View posting →</a>
+        <button class="hide" data-hide="${esc(j.url)}" title="Hide this job, even if a future search finds it again">🙅 Not interested</button>
+      </div>
+    </article>`;
+  }).join("");
+}
+
+jobsEl.addEventListener("click", (e) => {
+  const p = e.target.closest("button[data-prep]");
+  if (p) return openKit(p.dataset.prep);
+  const h = e.target.closest("button[data-hide]");
+  if (h) {
+    saveMark(h.dataset.hide, { hidden: true });
+    jobs = jobs.filter(j => j.url !== h.dataset.hide);
+    return render();
+  }
+  const b = e.target.closest("button[data-mark]");
+  if (!b) return;
+  const m = marks[b.dataset.url] ||= {};
+  m[b.dataset.mark] = !m[b.dataset.mark];
+  if (b.dataset.mark === "applied") {
+    m.applied_at = m.applied ? new Date().toISOString() : null;
+    if (m.applied) celebrate(e.clientX, e.clientY);
+  }
+  saveMark(b.dataset.url, { [b.dataset.mark]: m[b.dataset.mark] });
+  render();
+});
+[filterEl, typeFilterEl, sortEl].forEach(el => el.addEventListener("change", render));
+
+// ---------- resume upload ----------
+const resumeStatus = document.getElementById("resumeStatus");
+const resumeFile = document.getElementById("resumeFile");
+const resumeRemove = document.getElementById("resumeRemove");
+
+function showResume(r) {
+  resumeStatus.className = "resume-status" + (r.uploaded ? " ok" : "");
+  resumeStatus.textContent = r.error ? "😬 " + r.error
+    : r.uploaded ? `✅ Resume PDF saved (${r.saved})` : "No PDF uploaded yet.";
+  resumeRemove.hidden = !r.uploaded;
+  document.querySelector("label.upload").textContent = r.uploaded ? "Replace PDF" : "Upload PDF";
+}
+fetch("/api/resume").then(r => r.json()).then(showResume).catch(() => showResume({ error: "Couldn't check. Is app.py running?" }));
+
+resumeFile.addEventListener("change", async () => {
+  if (!resumeFile.files[0]) return;
+  const body = new FormData();
+  body.append("file", resumeFile.files[0]);
+  resumeStatus.textContent = "Uploading…";
+  try { showResume(await (await fetch("/api/resume", { method: "POST", body })).json()); }
+  catch { showResume({ error: "Upload failed. Is the file under 10 MB?" }); }
+  resumeFile.value = "";
+});
+resumeRemove.addEventListener("click", async () => {
+  showResume(await (await fetch("/api/resume", { method: "DELETE" })).json());
+});
+
+// ---------- application helper ----------
+const kitEl = document.getElementById("kit");
+let kitUrl = null;
+
+function openKit(url) {
+  kitUrl = url;
+  if (!kits[url] && !prepping[url]) startPrep(url);
+  showKit();
+  if (!kitEl.open) kitEl.showModal();
+}
+
+async function startPrep(url) {
+  const job = jobs.find(j => j.url === url);
+  delete kitErrors[url];
+  prepping[url] = { log: [] };
+  render();
+  let state;
+  try {
+    state = await runTask("/api/prep", { url, profile: Object.fromEntries(new FormData(form)) },
+      s => { prepping[url] = s; if (kitUrl === url && kitEl.open) showKit(); });
+  } catch {
+    state = { error: "Couldn't reach the server. Is app.py still running?" };
+  }
+  delete prepping[url];
+  if (state.status === "done") kits[url] = state.result;  // the server already saved it
+  else kitErrors[url] = state.error || "Something went wrong. Try again.";
+  render();
+  if (kitUrl === url && kitEl.open) showKit();
+}
+
+function showKit() {
+  const job = jobs.find(j => j.url === kitUrl) || {};
+  const head = `<div class="kit-head"><div><h2>${esc(job.title)}</h2>
+    <div class="meta">🏢 ${esc(job.company)} · 📍 ${esc(job.location)}</div></div>
+    <button class="close" data-kit="close" aria-label="Close">✕</button></div>`;
+
+  if (prepping[kitUrl]) {
+    const log = prepping[kitUrl].log || [];
+    kitEl.innerHTML = head + `<div class="kit-loading"><span class="big">✍️</span>
+      <h3>Your helper is writing your application kit…</h3>
+      <p class="meta">This takes a minute or two. You can close this window; it keeps working.</p>
+      <ul>${log.map(l => `<li>${esc(l)}</li>`).join("")}</ul></div>`;
+    return;
+  }
+  if (kitErrors[kitUrl]) {
+    kitEl.innerHTML = head + `<div class="kit-body"><div class="kit-sec open-bad">😬 ${esc(kitErrors[kitUrl])}</div>
+      <div class="kit-foot"><button data-kit="retry">Try again</button></div></div>`;
+    return;
+  }
+  const k = kits[kitUrl];
+  if (!k) return;
+  k.checked ||= {};
+  const openCls = /closed/i.test(k.still_open) ? "open-bad" : /open/i.test(k.still_open) ? "open-ok" : "note";
+  const list = items => `<ul>${items.map(i => `<li>${esc(i)}</li>`).join("")}</ul>`;
+  const applied = marks[kitUrl]?.applied;
+
+  kitEl.innerHTML = head + `<div class="kit-body">
+    <div class="kit-sec note">👋 <b>Review before you use any of this.</b> Fill in anything in [square brackets]
+      and make sure every line is true for you. Your edits below are saved automatically.</div>
+    <div class="kit-sec ${openCls}"><h3>📌 ${esc(k.still_open)}</h3>${esc(k.role_summary)}</div>
+    <div class="kit-sec"><h3>💪 Your strengths for this role</h3>${list(k.your_strengths)}</div>
+    ${k.gaps.length ? `<div class="kit-sec"><h3>🧩 Gaps & how to handle them</h3>${list(k.gaps)}</div>` : ""}
+    <div class="kit-sec"><h3>🛠️ Resume tweaks</h3>
+      ${k.resume_tweaks.map(t => `<div class="tweak"><b>${esc(t.where)}</b>${esc(t.suggestion)}<br><small>Why: ${esc(t.why)}</small></div>`).join("")}</div>
+    <div class="kit-sec"><h3>💌 Cover letter
+        <button data-kit="copy" data-field="cover_letter">Copy</button>
+        <button data-kit="download">Download</button></h3>
+      <textarea class="letter" data-field="cover_letter">${esc(k.cover_letter)}</textarea></div>
+    <div class="kit-sec"><h3>💬 Draft answers</h3>
+      ${k.answers.map((a, i) => `<div class="qa"><b>${esc(a.question)}</b>
+        <textarea data-field="answer-${i}">${esc(a.answer)}</textarea>
+        <button data-kit="copy" data-field="answer-${i}">Copy</button></div>`).join("")}</div>
+    <div class="kit-sec"><h3>✅ Before you submit</h3>
+      ${k.before_you_submit.map((c, i) => `<label class="check"><input type="checkbox" data-check="${i}" ${k.checked[i] ? "checked" : ""}> ${esc(c)}</label>`).join("")}</div>
+    <div class="kit-foot">
+      <a class="go" href="${safeUrl(kitUrl)}" target="_blank" rel="noopener">🚀 Open the posting & apply</a>
+      <button data-kit="applied" class="${applied ? "on" : ""}">${applied ? "✅ Applied" : "Mark applied"}</button>
+      <button data-kit="retry">↻ Write a new version</button>
+    </div></div>`;
+}
+
+function kitText(field) {
+  const k = kits[kitUrl];
+  return field === "cover_letter" ? k.cover_letter : k.answers[+field.split("-")[1]].answer;
+}
+
+kitEl.addEventListener("input", (e) => {
+  const k = kits[kitUrl], f = e.target.dataset.field;
+  if (!k) return;
+  if (f === "cover_letter") k.cover_letter = e.target.value;
+  else if (f?.startsWith("answer-")) k.answers[+f.split("-")[1]].answer = e.target.value;
+  else if (e.target.dataset.check) k.checked[e.target.dataset.check] = e.target.checked;
+  saveKit(kitUrl);
+});
+
+kitEl.addEventListener("click", async (e) => {
+  if (e.target === kitEl) return kitEl.close();   // clicked the dark area around the window
+  const b = e.target.closest("button[data-kit]");
+  if (!b) return;
+  const action = b.dataset.kit;
+  if (action === "close") kitEl.close();
+  if (action === "retry") { delete kits[kitUrl]; startPrep(kitUrl); showKit(); }
+  if (action === "copy") {
+    try { await navigator.clipboard.writeText(kitText(b.dataset.field)); b.textContent = "Copied!"; }
+    catch { b.textContent = "Select & copy manually"; }
+    setTimeout(() => (b.textContent = "Copy"), 1500);
+  }
+  if (action === "download") {
+    const job = jobs.find(j => j.url === kitUrl) || {};
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([kits[kitUrl].cover_letter], { type: "text/plain" }));
+    a.download = `Cover letter - ${job.company || "job"}.txt`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+  if (action === "applied") {
+    const m = marks[kitUrl] ||= {};
+    m.applied = !m.applied;
+    m.applied_at = m.applied ? new Date().toISOString() : null;
+    if (m.applied) celebrate(e.clientX, e.clientY);
+    saveMark(kitUrl, { applied: m.applied });
+    render(); showKit();
+  }
+});
+
+function celebrate(x, y) {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  for (let i = 0; i < 14; i++) {
+    const s = document.createElement("span");
+    s.className = "confetti";
+    s.textContent = ["🎉", "✨", "🎊", "💼", "⭐"][i % 5];
+    s.style.left = x + "px"; s.style.top = y + "px";
+    s.style.setProperty("--dx", (Math.random() * 240 - 120) + "px");
+    s.style.setProperty("--dy", (Math.random() * -180 - 40) + "px");
+    s.style.setProperty("--r", (Math.random() * 360) + "deg");
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 1000);
+  }
+}
+
+startup();
+
+function esc(s) { return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function safeUrl(u) { return /^https?:\/\//i.test(u) ? esc(u) : "#"; }
+</script>
+</body>
+</html>
